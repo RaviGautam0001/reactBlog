@@ -31,7 +31,13 @@ export class Signup extends Component {
           password: 'required|string|min:6|confirmed',
       }
 
-      validateAll(data, rules)
+      const message = {
+          required: 'The {{ field }} is required.',
+          'email.email': 'The email is invalid',
+          'password.confirmed': 'The password confirmation does not match.'
+      }
+
+      validateAll(data, rules,message)
         .then(() => {
             //register the user
         })
@@ -61,6 +67,7 @@ export class Signup extends Component {
                     placeholder="Username" 
                     onChange={this.handleInputChange}
                     />
+                 { this.state.errors['name'] &&  <small className="text-danger">{this.state.errors['name']}</small> }
                 </div>
                 
                 <div className="form-group">
@@ -71,6 +78,7 @@ export class Signup extends Component {
                     placeholder="Email address" 
                     onChange={this.handleInputChange}
                     />
+                    { this.state.errors['email'] &&  <small className="text-danger">{this.state.errors['email']}</small> }
                 </div>
 
                 <div className="form-group">
@@ -81,6 +89,7 @@ export class Signup extends Component {
                     placeholder="Password" 
                     onChange={this.handleInputChange}
                     />
+                    { this.state.errors['password'] &&  <small className="text-danger">{this.state.errors['password']}</small> }
                 </div>
 
                 <div className="form-group">
