@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
+import Axios from 'axios';
 import { validateAll } from 'indicative';
+
+import config from '../../config';
 
 export class Signup extends Component {
 
@@ -18,36 +21,17 @@ export class Signup extends Component {
       this.setState({[event.target.name]: event.target.value});
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
       event.preventDefault();
-      console.log('state', this.state);
+      try{
+           const user = await this.props.registerUser(this.state);
+           localStorage.setItem('user', JSON.stringify(user));
+           this.props.setAuthUser(user);
+           this.props.history.push('/');
+        }catch(errors){
+            this.setState({ errors: errors });
+        }
 
-      //validating user Data
-
-      const data = this.state;
-      const rules = {
-          name: 'required|string',
-          email: 'required|email',
-          password: 'required|string|min:6|confirmed',
-      }
-
-      const message = {
-          required: 'The {{ field }} is required.',
-          'email.email': 'The email is invalid',
-          'password.confirmed': 'The password confirmation does not match.'
-      }
-
-      validateAll(data, rules,message)
-        .then(() => {
-            //register the user
-        })
-        .catch(errors => {
-            //show validation errors
-            const formattedErros = {};
-            errors.forEach(error => formattedErros[error.field] = error.message);
-
-            this.setState({ errors: formattedErros });
-        })
   }
 
   render() {
