@@ -28,8 +28,40 @@ export default class AuthService {
            return response.data.data;
             
         }catch(errors){
+            const formattedErros = {}; 
+          if(errors.response.status === 422){
+
+            formattedErros['email'] = errors.response.data['email'][0];
+            return Promise.reject(formattedErros);
+          }   
+            errors.forEach(error => formattedErros[error.field] = error.message);
+            return Promise.reject(formattedErros);
+        }
+      }
+
+      async loginUser (data) {
+ 
+        const rules = {
+            email: 'required|email',
+            password: 'required|string',
+        }
+  
+        const message = {
+            required: 'The {{ field }} is required.',
+            'email.email': 'The email is invalid',
+        }
+  
+        try{
+          await validateAll(data, rules,message)
+          const response = await Axios.post(`${config.apiUrl}/auth/login`, {
+            email: data.email,
+            password: data.password
+           }) 
+           return response.data.data;
             
-          if(errors.status === 422){
+        }catch(errors){
+            
+          if(errors.status === 401){
             formattedErros['email'] = errors.response.data['email'][0];
             return Promise.reject(formattedErros);
           }   
