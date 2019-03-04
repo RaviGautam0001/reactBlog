@@ -40,7 +40,15 @@ class App extends React.Component {
           <div>       
           { location.pathname !== '/login' && location.pathname !== '/signup' &&  <Navbar authUser={this.state.authUser} />  }
           <Route exact path="/" component={Welcome} />
-          <Route exact path="/login" component={Login} />
+          <Route 
+           exact 
+           path="/login" 
+           render={
+             (props) => <Login {...props} 
+               setAuthUser={this.setAuthUser}
+               loginUser={this.props.authService.loginUser}
+             />  
+           } />
           <Route 
            exact 
            path="/signup" 

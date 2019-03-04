@@ -7,7 +7,8 @@ class Login extends Component {
         super();
         this.state = {
             email: "",
-            password: ""
+            password: "",
+            errors: {}
         }
     }
 
@@ -15,9 +16,16 @@ class Login extends Component {
         this.setState({[event.target.name]: event.target.value});
     }
 
-    handleSubmit = (event) => {
+    handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(this.state);
+        try{ 
+         const user = await this.props.loginUser(this.state);
+         localStorage.setItem('user', JSON.stringify(user));
+         this.props.setAuthUser(user);
+         this.props.history.push('/');
+        }catch (errors) {
+          this.setState({ errors: errors });
+        } 
     }
 
     render (){

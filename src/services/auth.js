@@ -28,7 +28,7 @@ export default class AuthService {
            return response.data.data;
             
         }catch(errors){
-            const formattedErros = {}; 
+          const formattedErros = {}; 
           if(errors.response.status === 422){
 
             formattedErros['email'] = errors.response.data['email'][0];
@@ -60,13 +60,11 @@ export default class AuthService {
            return response.data.data;
             
         }catch(errors){
-            
-          if(errors.status === 401){
-            formattedErros['email'] = errors.response.data['email'][0];
+          const formattedErros = {};   
+          if(errors.response.status === 401){
+            formattedErros['email'] = 'Invalid credentials.';
             return Promise.reject(formattedErros);
           }   
-
-            const formattedErros = {};
             errors.forEach(error => formattedErros[error.field] = error.message);
             return Promise.reject(formattedErros);
         }
